@@ -12,7 +12,7 @@ public:
     static void AStar(Node* root);
     static bool Backtracking(Node* root, int goal);
 
-    // Κάνε την heuristic μέθοδο δημόσια
+
     static int heuristic(Node* node);
 
 private:
