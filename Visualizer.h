@@ -1,7 +1,7 @@
 #ifndef VISUALIZER_H
 #define VISUALIZER_H
 
-#include "Node.hpp"
+#include "Node.h"
 #include <string>
 
 class Visualizer {

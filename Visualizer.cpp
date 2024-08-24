@@ -1,4 +1,4 @@
-#include "Visualizer.hpp"
+#include "Visualizer.h"
 #include <fstream>
 #include <functional>
 

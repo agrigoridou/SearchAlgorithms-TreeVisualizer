@@ -1,4 +1,4 @@
-#include "Node.hpp"
+#include "Node.h"
 
 Node::Node(int val, Node* par) : value(val), parent(par) {}
 

@@ -2,7 +2,7 @@
 #define SEARCHALGORITHMS_H
 
 
-#include "Node.hpp"
+#include "Node.h"
 
 class SearchAlgorithms {
 public:
