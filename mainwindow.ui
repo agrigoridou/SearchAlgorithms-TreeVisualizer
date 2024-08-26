@@ -13,17 +13,149 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>21</height>
-    </rect>
-   </property>
+  <widget class="QWidget" name="centralwidget">
+
+   <widget class="QLabel" name="graphLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>780</width>
+      <height>490</height>
+     </rect>
+    </property>
+   </widget>
+
+   <!-- Generate Tree Button -->
+   <widget class="QPushButton" name="generateRandomTreeButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>120</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Generate Tree</string>
+    </property>
+   </widget>
+
+   <!-- Parent Node Value Input -->
+   <widget class="QSpinBox" name="parentValueSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>10</y>
+      <width>100</width>
+      <height>40</height>
+     </rect>
+    </property>
+   </widget>
+
+   <!-- Child Node Value Input -->
+   <widget class="QSpinBox" name="childValueSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>10</y>
+      <width>100</width>
+      <height>40</height>
+     </rect>
+    </property>
+   </widget>
+
+   <!-- Add Node Button -->
+   <widget class="QPushButton" name="addNodeButton">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>10</y>
+      <width>100</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add Node</string>
+    </property>
+   </widget>
+
+   <!-- Goal Value Input for Backtracking -->
+   <widget class="QSpinBox" name="goalSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>10</y>
+      <width>100</width>
+      <height>40</height>
+     </rect>
+    </property>
+   </widget>
+
+   <!-- Algorithm Selection ComboBox -->
+   <widget class="QComboBox" name="algorithmComboBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>200</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>BFS</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>DFS</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>UCS</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>A*</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Best-First Search</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>IDS</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Backtracking</string>
+     </property>
+    </item>
+   </widget>
+
+   <!-- Execute Algorithm Button -->
+   <widget class="QPushButton" name="executeAlgorithmButton">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>60</y>
+      <width>120</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Execute</string>
+    </property>
+   </widget>
+
   </widget>
+  <widget class="QMenuBar" name="menubar"/>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>

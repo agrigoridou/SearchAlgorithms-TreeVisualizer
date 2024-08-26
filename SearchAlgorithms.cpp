@@ -110,3 +110,37 @@ bool SearchAlgorithms::Backtracking(Node* node, int goal) {
     }
     return false;
 }
+
+// Ensure BestFirstCompare is defined
+struct BestFirstCompare {
+    bool operator()(Node* a, Node* b) {
+        return SearchAlgorithms::heuristic(a) > SearchAlgorithms::heuristic(b);
+    }
+};
+
+void SearchAlgorithms::BestFirstSearch(Node* root, int goalValue) {
+    if (!root) return;
+
+    // Define a priority queue with a custom comparator for Best-First Search
+    std::priority_queue<Node*, std::vector<Node*>, BestFirstCompare> pq;
+    pq.push(root);
+
+    while (!pq.empty()) {
+        Node* current = pq.top();
+        pq.pop();
+        std::cout << "Visited: " << current->value << std::endl;
+
+        // Check if the current node is the goal
+        if (current->value == goalValue) {
+            std::cout << "Goal found: " << current->value << std::endl;
+            return;
+        }
+
+        for (Node* child : current->children) {
+            pq.push(child);
+        }
+    }
+
+    std::cout << "Goal not found" << std::endl;
+}
+

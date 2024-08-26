@@ -15,6 +15,4 @@ public:
     void addChild(int val);
 };
 
-
-
 #endif // NODE_H
