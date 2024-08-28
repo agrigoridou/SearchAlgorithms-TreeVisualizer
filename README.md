@@ -1,12 +1,12 @@
 # SearchAlgorithms-TreeVisualizer
 
+Tree Visualizer creates and visualizes trees and supports various search algorithms such as BFS, DFS, UCS, A*, Best-First Search, IDS, and Backtracking. It provides the ability to generate random trees, add nodes, and visualize the current state of the tree.
 
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/1f703302-8e28-4f7f-8945-22090ef32970" alt="image" width="600">
 </div>
 
-Tree Visualizer creates and visualizes trees and supports various search algorithms such as BFS, DFS, UCS, A*, Best-First Search, IDS, and Backtracking. It provides the ability to generate random trees, add nodes, and visualize the current state of the tree.
 
 ## Requirements
 
