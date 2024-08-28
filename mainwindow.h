@@ -20,9 +20,9 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_generateRandomTreeButton_clicked();
-    void on_addNodeButton_clicked();
-    void on_executeAlgorithmButton_clicked();
+    void generateRandomTreeButton();
+    void addNodeButton();
+    void executeAlgorithmButton();
     void processNextNode(); // This will handle BFS and DFS processing
     void processNextNodeDFS(); // Add if using DFS
 

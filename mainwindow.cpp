@@ -19,9 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
     srand(static_cast<unsigned>(time(0)));  // Seed the random number generator
     connect(timer, &QTimer::timeout, this, &MainWindow::processNextNode);
 
-    connect(ui->executeAlgorithmButton, &QPushButton::clicked, this, &MainWindow::on_executeAlgorithmButton_clicked);
-    connect(ui->generateRandomTreeButton, &QPushButton::clicked, this, &MainWindow::on_generateRandomTreeButton_clicked);
-    connect(ui->addNodeButton, &QPushButton::clicked, this, &MainWindow::on_addNodeButton_clicked);
+    connect(ui->executeAlgorithmButton, &QPushButton::clicked, this, &MainWindow::executeAlgorithmButton);
+    connect(ui->generateRandomTreeButton, &QPushButton::clicked, this, &MainWindow::generateRandomTreeButton);
+    connect(ui->addNodeButton, &QPushButton::clicked, this, &MainWindow::addNodeButton);
 }
 
 MainWindow::~MainWindow()
@@ -39,7 +39,7 @@ void MainWindow::deleteTree(Node* node)
     delete node;
 }
 
-void MainWindow::on_executeAlgorithmButton_clicked()
+void MainWindow::executeAlgorithmButton()
 {
     QString selectedAlgorithm = ui->algorithmComboBox->currentText();
 
@@ -60,7 +60,7 @@ void MainWindow::on_executeAlgorithmButton_clicked()
     }
 }
 
-void MainWindow::on_generateRandomTreeButton_clicked()
+void MainWindow::generateRandomTreeButton()
 {
     if (root) {
         deleteTree(root); // Correctly call deleteTree
@@ -93,19 +93,29 @@ Node* MainWindow::createRandomTree(int depth, int maxChildren)
     return node;
 }
 
-void MainWindow::on_addNodeButton_clicked()
+void MainWindow::addNodeButton()
 {
     int parentValue = ui->parentValueSpinBox->value();
     int childValue = ui->childValueSpinBox->value();
 
-    Node* parentNode = findNodeByValue(root, parentValue);
-    if (parentNode) {
-        parentNode->addChild(childValue);
-        visualizeCurrentState();
-    } else {
-        ui->statusbar->showMessage("Parent node not found!");
+    // Εύρεση ή Δημιουργία του γονικού κόμβου
+    Node* parentNode = findNodeByValue(root, parentValue);  // Σωστός τύπος για την εύρεση
+    if (!parentNode) {
+        parentNode = new Node(parentValue);  // Δημιουργία του γονικού κόμβου αν δεν υπάρχει
+        if (root == nullptr) {
+            root = parentNode;  // Αν το δέντρο είναι άδειο, ο γονικός κόμβος είναι η ρίζα
+        }
+        // Προσθέστε τον γονικό κόμβο στο δέντρο αν χρειάζεται
     }
+
+    // Δημιουργία και Προσθήκη του νέου κόμβου
+    Node* newNode = new Node(childValue);
+    parentNode->children.push_back(newNode);  // Προσθήκη του νέου κόμβου στα παιδιά του γονικού κόμβου
+
+    // Ενημέρωση της εμφάνισης του δέντρου
+    visualizeCurrentState();
 }
+
 
 Node* MainWindow::findNodeByValue(Node* node, int value)
 {
@@ -118,14 +128,17 @@ Node* MainWindow::findNodeByValue(Node* node, int value)
     return nullptr;
 }
 
-void MainWindow::runBFS()
-{
-    if (root == nullptr) return;
-    bfsQueue.clear(); // Clear the queue before starting
+
+void MainWindow::runBFS() {
+    if (!root) return;
+    bfsQueue.clear();
     currentNode = root;
     bfsQueue.enqueue(root);
+    ui->statusbar->showMessage("Run BFS...");
+    connect(timer, &QTimer::timeout, this, &MainWindow::processNextNode);
     timer->start(1000);
 }
+
 
 void MainWindow::processNextNode()
 {
@@ -140,6 +153,16 @@ void MainWindow::processNextNode()
     for (Node* child : currentNode->children) {
         bfsQueue.enqueue(child);
     }
+
+
+    if (bfsQueue.isEmpty() || dfsStack.isEmpty()) {
+        timer->stop();
+        disconnect(timer, &QTimer::timeout, this, &MainWindow::processNextNode);
+        disconnect(timer, &QTimer::timeout, this, &MainWindow::processNextNodeDFS);
+        return;
+    }
+
+
 }
 
 void MainWindow::runDFS()
@@ -164,6 +187,14 @@ void MainWindow::processNextNodeDFS()
     for (Node* child : currentNode->children) {
         dfsStack.push(child);
     }
+
+    if (bfsQueue.isEmpty() || dfsStack.isEmpty()) {
+        timer->stop();
+        disconnect(timer, &QTimer::timeout, this, &MainWindow::processNextNode);
+        disconnect(timer, &QTimer::timeout, this, &MainWindow::processNextNodeDFS);
+        return;
+    }
+
 }
 
 void MainWindow::runUCS()
