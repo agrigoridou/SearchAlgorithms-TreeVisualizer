@@ -81,6 +81,13 @@ Node* MainWindow::createRandomTree(int depth, int maxChildren)
     int value = rand() % 100;
     Node* node = new Node(value);
 
+    int goalValue = ui->goalSpinBox->value();
+
+
+    if (value == goalValue || (depth == 1 && rand() % 2 == 0)) {
+        node->value = goalValue;
+    }
+
     int numChildren = rand() % maxChildren + 1;
 
     for (int i = 0; i < numChildren; ++i) {
@@ -93,26 +100,28 @@ Node* MainWindow::createRandomTree(int depth, int maxChildren)
     return node;
 }
 
+
+
 void MainWindow::addNodeButton()
 {
     int parentValue = ui->parentValueSpinBox->value();
     int childValue = ui->childValueSpinBox->value();
 
-    // Εύρεση ή Δημιουργία του γονικού κόμβου
-    Node* parentNode = findNodeByValue(root, parentValue);  // Σωστός τύπος για την εύρεση
+
+    Node* parentNode = findNodeByValue(root, parentValue);
     if (!parentNode) {
-        parentNode = new Node(parentValue);  // Δημιουργία του γονικού κόμβου αν δεν υπάρχει
+        parentNode = new Node(parentValue);
         if (root == nullptr) {
-            root = parentNode;  // Αν το δέντρο είναι άδειο, ο γονικός κόμβος είναι η ρίζα
+            root = parentNode;
         }
-        // Προσθέστε τον γονικό κόμβο στο δέντρο αν χρειάζεται
+
     }
 
-    // Δημιουργία και Προσθήκη του νέου κόμβου
-    Node* newNode = new Node(childValue);
-    parentNode->children.push_back(newNode);  // Προσθήκη του νέου κόμβου στα παιδιά του γονικού κόμβου
 
-    // Ενημέρωση της εμφάνισης του δέντρου
+    Node* newNode = new Node(childValue);
+    parentNode->children.push_back(newNode);
+
+
     visualizeCurrentState();
 }
 
@@ -129,9 +138,61 @@ Node* MainWindow::findNodeByValue(Node* node, int value)
 }
 
 
-void MainWindow::runBFS() {
+
+
+void MainWindow::processNextNode()
+{
+    if (bfsQueue.isEmpty()) {
+        timer->stop();
+        ui->statusbar->showMessage("Queue is empty. Search ended.");
+        return;
+    }
+
+    currentNode = bfsQueue.dequeue();
+    visitedNodes.append(currentNode);
+    ui->statusbar->showMessage(QString("Visited: %1").arg(currentNode->value));
+    visualizeCurrentState();
+
+    int goalValue = ui->goalSpinBox->value();
+    if (currentNode->value == goalValue) {
+        timer->stop();
+        ui->statusbar->showMessage(QString("Goal Found: %1").arg(currentNode->value));
+        displayPath();
+        return;
+    }
+
+    for (Node* child : currentNode->children) {
+        bfsQueue.enqueue(child);
+    }
+
+    if (bfsQueue.isEmpty()) {
+        timer->stop();
+        ui->statusbar->showMessage("Search completed without finding the goal.");
+    }
+}
+
+
+
+
+void MainWindow::displayPath()
+{
+    QString path = "Path to goal: ";
+    for (Node* node : visitedNodes) {
+        path += QString::number(node->value) + " -> ";
+    }
+    path.chop(4);
+    ui->statusbar->showMessage(path);
+}
+
+
+
+
+
+void MainWindow::runBFS()
+{
     if (!root) return;
     bfsQueue.clear();
+    visitedNodes.clear();
     currentNode = root;
     bfsQueue.enqueue(root);
     ui->statusbar->showMessage("Run BFS...");
@@ -140,30 +201,7 @@ void MainWindow::runBFS() {
 }
 
 
-void MainWindow::processNextNode()
-{
-    if (bfsQueue.isEmpty()) {
-        timer->stop();
-        return;
-    }
-    currentNode = bfsQueue.dequeue();
-    ui->statusbar->showMessage(QString("Visited: %1").arg(currentNode->value));
-    visualizeCurrentState();
 
-    for (Node* child : currentNode->children) {
-        bfsQueue.enqueue(child);
-    }
-
-
-    if (bfsQueue.isEmpty() || dfsStack.isEmpty()) {
-        timer->stop();
-        disconnect(timer, &QTimer::timeout, this, &MainWindow::processNextNode);
-        disconnect(timer, &QTimer::timeout, this, &MainWindow::processNextNodeDFS);
-        return;
-    }
-
-
-}
 
 void MainWindow::runDFS()
 {
@@ -173,6 +211,9 @@ void MainWindow::runDFS()
     connect(timer, &QTimer::timeout, this, &MainWindow::processNextNodeDFS);
     timer->start(1000);
 }
+
+
+
 
 void MainWindow::processNextNodeDFS()
 {
@@ -236,6 +277,7 @@ void MainWindow::runBacktracking()
 
 void MainWindow::visualizeCurrentState()
 {
+    int goalValue = ui->goalSpinBox->value();
     std::ofstream file("current_graph.dot");
     if (!file) {
         ui->statusbar->showMessage("Failed to open file for visualization.");
@@ -245,7 +287,15 @@ void MainWindow::visualizeCurrentState()
     file << "digraph G {\n";
 
     std::function<void(Node*)> traverse = [&](Node* node) {
-        std::string color = (node == currentNode) ? "yellow" : "lightgray";
+        std::string color;
+        if (node == currentNode) {
+            color = "yellow";
+        } else if (node->value == goalValue) {
+            color = "red";
+        } else {
+            color = "lightgray";
+        }
+
         file << "  " << node->value << " [style=filled, fillcolor=" << color << "];\n";
         for (Node* child : node->children) {
             file << "  " << node->value << " -> " << child->value << ";\n";

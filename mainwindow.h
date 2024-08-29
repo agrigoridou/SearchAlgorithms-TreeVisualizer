@@ -34,6 +34,7 @@ private:
     QTimer* timer;
     QQueue<Node*> bfsQueue; // For BFS
     QStack<Node*> dfsStack; // For DFS
+    QList<Node*> visitedNodes;
 
 
     Node* createRandomTree(int depth, int maxChildren);
@@ -47,6 +48,7 @@ private:
     void runBacktracking(); // Placeholder for Backtracking
     void visualizeCurrentState();
     void deleteTree(Node* node);
+    void displayPath();
 };
 
 #endif // MAINWINDOW_H
