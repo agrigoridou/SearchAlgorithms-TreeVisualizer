@@ -7,6 +7,7 @@ Tree Visualizer creates and visualizes trees and supports various search algorit
     <img src="https://github.com/user-attachments/assets/1f703302-8e28-4f7f-8945-22090ef32970" alt="image" width="600">
 </div>
 
+
 ## Requirements
 
 - Qt 5 or Qt 6
